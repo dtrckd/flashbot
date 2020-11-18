@@ -10,10 +10,11 @@ class FlashbotSpider(scrapy.Spider):
     allowed_domains = ['rss.jobsearch.monster.com']
 
     # Start the crawler at this URLs
-    start_urls = ['file:///path/to/your/index.xml']
-    #start_urls = ['http://rss.jobsearch.monster.com/rssquery.ashx?q={query}']
+    #start_urls = ['file:///path/to/your/index.xml']
+    start_urls = ['http://rss.jobsearch.monster.com/rssquery.ashx?q={query}']
 
-    thesaurus = ["machine learning", "machine", "learning", "big data", "big", "data"]
+    #thesaurus = ["machine learning", "machine", "learning", "big data", "big", "data"]
+    thesaurus = ["machine learning"]
 
     LOG_LEVEL = "INFO"
 
@@ -36,12 +37,11 @@ class FlashbotSpider(scrapy.Spider):
     def scrapit(self, response):
         query = response.meta["query"]
 
-        # Base item with query used to this response
-        item = {"query": query}
-        print(query, response)
-
         # Scrap the data
         for doc in response.xpath("//item"):
+            # Base item with query used to this response
+            item = {"query": query}
+
             item["title"] = doc.xpath("title/text()").extract()
             item["description"] = doc.xpath("description/text()").extract()
             item["link"] = doc.xpath("link/text()").extract()
